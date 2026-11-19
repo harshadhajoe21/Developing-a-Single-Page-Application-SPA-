@@ -1,0 +1,285 @@
+const app = document.getElementById("app");
+
+const routeStatus =
+    document.getElementById("route-status");
+
+const year = document.getElementById("year");
+
+year.textContent = new Date().getFullYear();
+
+
+// Application Pages
+
+const pages = {
+
+    "/": {
+        title: "Welcome to ExploreHub",
+
+        content: `
+            <h2>Home</h2>
+
+            <p>
+                Welcome! This Single Page Application
+                changes the content when you select a
+                navigation link without reloading
+                the complete webpage.
+            </p>
+
+            <p>
+                Choose About, Services or Contact
+                to explore this application.
+            </p>
+
+            <a class="action-link"
+                href="/about"
+                data-link>
+                Learn About Us
+            </a>
+        `
+    },
+
+    "/about": {
+        title: "About ExploreHub",
+
+        content: `
+            <h2>About</h2>
+
+            <p>
+                ExploreHub is a demonstration project
+                created to explain the basic concept
+                of a Single Page Application.
+            </p>
+
+            <p>
+                JavaScript updates the webpage
+                dynamically without loading a
+                completely new HTML page.
+            </p>
+        `
+    },
+
+    "/services": {
+        title: "Our Services",
+
+        content: `
+            <h2>Services</h2>
+
+            <p>
+                We provide the following example services:
+            </p>
+
+            <ul class="feature-list">
+                <li>Responsive Web Design</li>
+                <li>Interactive User Interfaces</li>
+                <li>Frontend Development</li>
+            </ul>
+        `
+    },
+
+    "/contact": {
+        title: "Contact ExploreHub",
+
+        content: `
+            <h2>Contact</h2>
+
+            <p>
+                Complete this sample form to test
+                the contact page interaction.
+            </p>
+
+            <form class="contact-form" id="contact-form">
+
+                <label for="name">Your Name</label>
+
+                <input
+                    id="name"
+                    name="name"
+                    type="text"
+                    required
+                >
+
+                <label for="email">Email Address</label>
+
+                <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    required
+                >
+
+                <button type="submit">
+                    Submit
+                </button>
+
+                <p class="form-message"
+                    id="form-message"
+                    aria-live="polite">
+                </p>
+
+            </form>
+        `
+    }
+
+};
+
+
+// Normalize URL
+
+function normalizePath(path) {
+
+    if (!path || path === "/") {
+        return "/";
+    }
+
+    return path.replace(/\/+$/, "");
+
+}
+
+
+// Display Page Content
+
+function renderPage(path, addHistory = false) {
+
+    const route = normalizePath(path);
+
+    const page = pages[route] || {
+
+        title: "Page Not Found",
+
+        content: `
+            <h2>Page Not Found</h2>
+
+            <p>
+                The requested page does not exist.
+            </p>
+
+            <a class="action-link"
+                href="/"
+                data-link>
+                Return Home
+            </a>
+        `
+    };
+
+
+    // Update Browser URL
+
+    if (addHistory) {
+
+        history.pushState(
+            { route },
+            "",
+            route
+        );
+
+    }
+
+
+    // Update Main Content
+
+    app.setAttribute("aria-busy", "true");
+
+    app.innerHTML = page.content;
+
+    app.setAttribute("aria-busy", "false");
+
+
+    // Update Page Title
+
+    document.title =
+        `${page.title} | ExploreHub`;
+
+    routeStatus.textContent =
+        `${page.title} loaded`;
+
+
+    // Highlight Active Navigation
+
+    document.querySelectorAll("nav a[data-link]")
+        .forEach(link => {
+
+            const isCurrent =
+                normalizePath(link.getAttribute("href")) === route;
+
+            if (isCurrent) {
+
+                link.setAttribute("aria-current", "page");
+
+            } else {
+
+                link.removeAttribute("aria-current");
+
+            }
+
+        });
+
+}
+
+
+// Navigation Click Handling
+
+document.addEventListener("click", function(event) {
+
+    const link = event.target.closest("a[data-link]");
+
+    if (!link) {
+        return;
+    }
+
+    const destination =
+        new URL(link.href, window.location.origin);
+
+    if (destination.origin !== window.location.origin) {
+        return;
+    }
+
+    event.preventDefault();
+
+    renderPage(destination.pathname, true);
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+});
+
+
+// Browser Back and Forward Buttons
+
+window.addEventListener("popstate", function() {
+
+    renderPage(window.location.pathname);
+
+});
+
+
+// Contact Form Handling
+
+document.addEventListener("submit", function(event) {
+
+    if (event.target.id !== "contact-form") {
+        return;
+    }
+
+    event.preventDefault();
+
+    if (!event.target.reportValidity()) {
+        return;
+    }
+
+    const name =
+        document.getElementById("name").value.trim();
+
+    document.getElementById("form-message")
+        .textContent =
+        `Thank you, ${name}! Your demo form was completed successfully.`;
+
+    event.target.reset();
+
+});
+
+
+// Load Initial Page
+
+renderPage(window.location.pathname);
