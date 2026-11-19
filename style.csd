@@ -1,4 +1,4 @@
-* {
+ {
     box-sizing: border-box;
 }
 
@@ -29,7 +29,7 @@ a {
     margin-inline: auto;
 }
 
-/* Header */
+
 
 .topbar {
     background: white;
