@@ -1,1 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ExploreHub SPA demonstration">
+    <title>ExploreHub | SPA Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
 
+<body>
+
+    <header class="topbar">
+        <div class="container topbar-inner">
+
+            <a class="logo" href="/" data-link>ExploreHub</a>
+
+            <nav aria-label="Main navigation">
+                <a href="/" data-link>Home</a>
+                <a href="/about" data-link>About</a>
+                <a href="/services" data-link>Services</a>
+                <a href="/contact" data-link>Contact</a>
+            </nav>
+
+        </div>
+    </header>
+
+    <main class="container page-shell">
+
+        <div class="intro">
+            <p class="eyebrow">SINGLE PAGE APPLICATION DEMO</p>
+
+            <h1>One Page. Multiple Experiences.</h1>
+
+            <p>
+                Navigate between sections without
+                reloading the entire webpage.
+            </p>
+        </div>
+
+        <section id="app"
+            class="content-card"
+            aria-live="polite"
+            aria-busy="false">
+
+            <!-- Dynamic content appears here -->
+
+        </section>
+
+        <p id="route-status"
+            class="visually-hidden"
+            role="status">
+        </p>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>
+                © <span id="year"></span>
+                ExploreHub. SPA Learning Project.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
